@@ -201,7 +201,10 @@ def carte_arrets(df):
             return "red"
 
     m = folium.Map(
-        location=[df["stop_lat"].mean(), df["stop_lon"].mean()], zoom_start=12
+        location=[df["stop_lat"].mean(), df["stop_lon"].mean()],
+        zoom_start=12,
+        width="50%",
+        height="400px",
     )
 
     for _, row in df.iterrows():
@@ -224,6 +227,8 @@ def carte_arrets(df):
     m.save("stops_map.html")
 
     print("\n✓ Carte des arrêts enregistrée dans : stops_map.html")
+
+    return m
 
 
 def main():
