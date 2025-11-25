@@ -80,10 +80,12 @@ def obtenir_service_ids_pour_date(feed, date_str):
 def calculer_indicateurs_arrets(feed, date_str):
     """
     Calcule les indicateurs pour chaque arrêt :
+    - Nombre de lignes desservies
     - Nombre de passages
     - Heure du premier départ
     - Heure du dernier départ
     - Amplitude horaire
+    - Temps d'attente moyen, min et max
     """
     print(f"\nCalcul des indicateurs pour le {date_str}...")
 
@@ -114,6 +116,22 @@ def calculer_indicateurs_arrets(feed, date_str):
         .reset_index()
     )
 
+    # Utilisation de gtfs_kit pour calculer les stats de headway
+    indic_gk = feed.compute_stop_stats([date_str])
+    indicateurs = indicateurs.merge(
+        indic_gk[["stop_id", "mean_headway", "max_headway", "num_routes"]],
+        on="stop_id",
+        how="left",
+    )
+    indicateurs.rename(
+        columns={
+            "num_routes": "nb_lignes",
+            "mean_headway": "temps_attente_moyen",
+            "max_headway": "temps_attente_max",
+        },
+        inplace=True,
+    )
+
     # Joindre avec les informations des arrêts
     indicateurs = indicateurs.merge(
         feed.stops[["stop_id", "stop_name", "stop_lat", "stop_lon"]],
@@ -137,10 +155,13 @@ def calculer_indicateurs_arrets(feed, date_str):
             "stop_name",
             "stop_lat",
             "stop_lon",
+            "nb_lignes",
             "nombre_passages",
             "premier_depart",
             "dernier_depart",
             "amplitude_horaire",
+            "temps_attente_moyen",
+            "temps_attente_max",
         ]
     ]
 
@@ -203,8 +224,8 @@ def carte_arrets(df):
     m = folium.Map(
         location=[df["stop_lat"].mean(), df["stop_lon"].mean()],
         zoom_start=12,
-        width="50%",
-        height="400px",
+        width="100%",
+        height="500px",
     )
 
     for _, row in df.iterrows():
