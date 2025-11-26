@@ -166,7 +166,7 @@ def creer_troncons_uniques(feed, route_type):
 # =============================================================================
 
 if __name__ == "__main__":
-    from utils import charger_gtfs, exporter_csv, exporter_geojson
+    from utils import charger_gtfs, exporter_gdf_to_csv, exporter_geojson
     
     # Charger le feed GTFS
     feed = charger_gtfs()
@@ -178,12 +178,12 @@ if __name__ == "__main__":
     
     # Bus (route_type = 3)
     troncons_bus = creer_troncons_uniques(feed, route_type=3)
-    exporter_csv(troncons_bus, 'output/troncons_uniques_bus.csv')
+    exporter_gdf_to_csv(troncons_bus, 'output/troncons_uniques_bus.csv')
     # exporter_geojson(troncons_bus, 'output/troncons_uniques_bus.geojson')
     
     # Tram (route_type = 0)
     troncons_tram = creer_troncons_uniques(feed, route_type=0)
-    exporter_csv(troncons_tram, 'output/troncons_uniques_tram.csv')
+    exporter_gdf_to_csv(troncons_tram, 'output/troncons_uniques_tram.csv')
     # exporter_geojson(troncons_tram, 'output/troncons_uniques_tram2.geojson')
     
     print("\n" + "="*70)
