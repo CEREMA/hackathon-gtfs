@@ -1,9 +1,17 @@
 import gtfs_kit as gk
 import pandas as pd
+from shapely import wkt
+import geopandas as gpd
+
 
 # Configuration
 GTFS_ZIP_PATH = "data/TAM_MMM_GTFS.zip"  # À modifier
-DATE_ANALYSE = "20251014"  # Format YYYYMMDD - À modifier
+
+
+########################################################################
+# HELPERS GTFS
+########################################################################
+
 
 def charger_gtfs(zip_path=GTFS_ZIP_PATH):
     """Charge le fichier GTFS"""
@@ -67,3 +75,17 @@ def obtenir_service_ids_pour_date(feed, date_str):
     service_ids = list(service_ids)
     print(f"✓ Services actifs le {date_str} : {len(service_ids)} service(s)")
     return service_ids
+
+
+########################################################################
+# UTILITAIRES D'EXPORT ET DE LECTURE
+########################################################################
+
+
+def read_csv_as_geodataframe(filepath):
+    """Lit un fichier CSV avec une colonne 'geometry' en GeoDataFrame
+    Retourne un Geodataframe"""
+    df = pd.read_csv(filepath)
+    df['geometry'] = df['geometry'].apply(wkt.loads)
+    gpd_df = gpd.GeoDataFrame(df, geometry='geometry')
+    return gpd_df

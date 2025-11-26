@@ -288,31 +288,34 @@ def export_df_to_geojson(df, filename):
     print(f"✓ Fichier GeoJSON sauvegardé dans '{filename}'")
 
 
+def read_csv_as_geodataframe(filepath):
+    """Lit un fichier CSV avec une colonne 'geometry' en GeoDataFrame
+    Retourne un Geodataframe"""
+    df = pd.read_csv(filepath)
+    df['geometry'] = df['geometry'].apply(wkt.loads)
+    gpd_df = gpd.GeoDataFrame(df, geometry='geometry')
+    return gpd_df
+
 if __name__ == "__main__":
     feed = charger_gtfs()
     # Tronçons bruts par type de route
     troncons_bus = creer_df_troncons(feed, route_type=3)
-    # export_table_troncons_csv(troncons_bus, 'output/troncons_bus.csv')
     troncons_tram = creer_df_troncons(feed, route_type=0)
-    # export_table_troncons_csv(troncons_tram, 'output/troncons_tram.csv')
 
     # Tronçons "parents"
     df_troncon_parent_bus = create_troncons_parents(troncons_bus, feed)
-    # export_table_troncons_csv(df_troncon_parent_bus, 'output/troncons_parents_bus.csv')
     df_troncon_parent_tram = create_troncons_parents(troncons_tram, feed)
-    # export_table_troncons_csv(df_troncon_parent_tram, 'output/troncons_parents_tram.csv')
 
     # Tronçons sans routes
     df_troncons_no_routes_bus = create_df_troncons_no_routes(df_troncon_parent_bus)
-    # export_table_troncons_csv(df_troncons_no_routes_bus, 'output/troncons_no_routes_bus.csv')
     df_troncons_no_routes_tram = create_df_troncons_no_routes(df_troncon_parent_tram)
-    # export_table_troncons_csv(df_troncons_no_routes_tram, 'output/troncons_no_routes_tram.csv')
 
     # Tronçons uniques
     df_troncons_uniques_bus = create_troncons_uniques(df_troncons_no_routes_bus)
-    # export_table_troncons_csv(df_troncons_uniques_bus, 'output/troncons_uniques_bus.csv')
+    df_troncons_uniques_bus.to_csv('output/troncons_uniques_bus.csv', index=False)
+    
     df_troncons_uniques_tram = create_troncons_uniques(df_troncons_no_routes_tram)
-    # export_table_troncons_csv(df_troncons_uniques_tram, 'output/troncons_uniques_tram.csv')
+    df_troncons_uniques_tram.to_csv('output/troncons_uniques_tram.csv', index=False)
 
     # Export geojson
     df_troncons_uniques_bus["geometry"] = df_troncons_uniques_bus["geometry"].apply(wkt.loads)

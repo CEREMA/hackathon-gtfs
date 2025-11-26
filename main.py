@@ -182,10 +182,4 @@ def main():
 
 if __name__ == "__main__":
     # resultats = main()
-    feed = charger_gtfs(GTFS_ZIP_PATH)
-    print(feed.segments)
-    # print(feed.compute_stop_stats('20251014', 'S5154'))
-    # print(feed.compute_stop_stats(['20251013', '20251014']))
-    # print(feed.compute_route_stats(['20251013', '20251014']))
-    # print(obtenir_service_ids_pour_date(feed, '20251013'))
-    # feed.create_shapes()
+    pass
