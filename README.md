@@ -5,6 +5,8 @@ Il est également proposé un notebook interactif pour comprendre les opération
 
 Elle a été développée lors du Hackathon TSNI 2025 du Cerema par l'équipe composée de Patrick GENDRE, Hugo DE LUCA et Maxence LIOGIER.
 
+Ce projet est en version alpha et il reste des [améliorations à implémenter](#todo)
+
 ## 🔗 Liens rapides
 
 Pour voir la librairie en action, vous pouvez :
@@ -17,6 +19,15 @@ Pour voir la librairie en action, vous pouvez :
 - Offrir une **chaîne de traitement** pour passer d’un jeu GTFS brut à des exports géolocalisés d'indicateurs à l'échelle des arrêts et des tronçons.
 - Proposer une offre d'indicateurs sur les tronçons même en l'absence du fichier ``shapes.txt`` dans les données GTFS.
 - Proposer à la fois des **scripts utilisables en local**, une **interface web conviviale** (via Streamlit) pour les utilisateurs non-techniques, et un **notebook d’exemple** pour tester / explorer les résultats.  
+
+
+## TODO
+
+- Corriger le notebook
+- Généraliser le traitement des modes pour adapter à plus de réseaux
+- Regrouper les arrêts par parent et répercuter sur les indicateurs
+- Améliorer la carte des arrêts (+ de métriques affichées...)
+- Peaufiner l'esthétique
 
 
 ## 📁 Structure du dépôt
