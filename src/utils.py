@@ -14,7 +14,11 @@ GTFS_ZIP_PATH = "data/TAM_MMM_GTFS.zip"  # À modifier
 
 
 def charger_gtfs(zip_path=GTFS_ZIP_PATH):
-    """Charge le fichier GTFS"""
+    """
+    Charge le fichier GTFS à l'aide de gtfs_kit.
+    Returns:
+        feed: gtfs_kit Feed object
+    """
     print(f"Chargement du fichier GTFS : {zip_path}")
     feed = gk.read_feed(zip_path, dist_units='km')
     print(f"✓ GTFS chargé avec succès")
@@ -25,6 +29,11 @@ def obtenir_service_ids_pour_date(feed, date_str):
     """
     Identifie les service_id actifs pour une date donnée
     en tenant compte de calendar et calendar_dates
+    Args:
+        feed: gtfs_kit Feed object
+        date_str (str): Date au format 'YYYYMMDD'
+    Returns:
+        list[str]: Liste des service_id actifs
     """
     date_obj = pd.to_datetime(date_str, format='%Y%m%d')
     jour_semaine = date_obj.strftime('%A').lower()  # lundi, mardi, etc.

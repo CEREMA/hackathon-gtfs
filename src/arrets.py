@@ -15,6 +15,9 @@ def calculer_indicateurs_arrets(feed, active_service_ids: list[str], date_str: s
     - Heure du dernier départ
     - Amplitude horaire
     - Temps d'attente moyen, min et max
+
+    Returns:
+        Panda Dataframe avec une ligne d'indicateurs par arrêt.
     """
     print(f"\nCalcul des indicateurs aux arrêts...")
 
@@ -100,7 +103,13 @@ def calculer_indicateurs_arrets(feed, active_service_ids: list[str], date_str: s
 
 
 def afficher_statistiques(df):
-    """Affiche des statistiques résumées"""
+    """
+    Affiche des statistiques résumées à partir d'un dataframe
+    d'indicateurs par arrêt
+    
+    :param df: Dataframe d'indicateurs par arrêt obtenu par
+    calcul à l'aide de la fonction calculer_indicateurs_arrets
+    """
     print("\n" + "=" * 70)
     print("STATISTIQUES GLOBALES")
     print("=" * 70)

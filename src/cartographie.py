@@ -5,6 +5,14 @@ import branca.colormap as cm
 
 
 def create_carte_arrets(df):
+    """
+    Crée une carte Folium interactive des indicateurs par arrêt.
+    Args:
+        df (pd.DataFrame): Dataframe contenant les indicateurs par arrêt.
+    Returns:
+        folium.Map: Carte Folium interactive.
+    """
+
     # Carte des arrêts avec leur nombre de passages
 
     # Définir les seuils pour les couleurs
