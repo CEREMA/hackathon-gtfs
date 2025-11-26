@@ -1,79 +1,140 @@
 """
-Fichier spécifique Streamlit
-à conserver à la racine du projet pour hébergement
+Application d'analyse GTFS - Interface principale
 """
+
 import os
 import tempfile
-
+import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
-from src.arrets import calculer_indicateurs_arrets
-from src.cartographie import create_carte_arrets
 from src.utils import charger_gtfs, obtenir_service_ids_pour_date
+from views.home import home_page
+from views.arrets import arrets_page
+from views.troncons import troncons_page
 
-# Interface Streamlit
-st.title("Analyse GTFS - Indicateurs par Arrêt")
+# Configuration de la page
+st.set_page_config(page_title="Analyse GTFS - Cerema", page_icon="🚌", layout="wide")
 
-st.sidebar.header("Paramètres")
+# Titre principal
+st.title("🚌 Analyse GTFS - Indicateurs de Transport")
 
+# Navigation horizontale en haut
+st.markdown(
+    """
+<style>
+.stButton button {
+    width: 100% !important;
+    margin: 0 !important;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.markdown("---")
+col1, col2, col3, col4 = st.columns([1, 1, 1, 3])  # 4 colonnes pour équilibrer l'espace
+
+with col1:
+    if st.button("🏠 Accueil", use_container_width=True):
+        st.session_state.selected_page = "Accueil"
+
+with col2:
+    if st.button("📍 Arrêts", use_container_width=True):
+        st.session_state.selected_page = "Arrêts"
+
+with col3:
+    if st.button("🛤️ Tronçons", use_container_width=True):
+        st.session_state.selected_page = "Tronçons"
+
+with col4:
+    st.write("")  # Espace vide pour équilibrer
+
+
+# Initialiser la page sélectionnée si pas déjà fait
+if "selected_page" not in st.session_state:
+    st.session_state.selected_page = "Accueil"
+
+# Barre latérale pour les paramètres uniquement
+st.sidebar.header("📁 Paramètres d'analyse")
 uploaded_file = st.sidebar.file_uploader("Uploader le fichier GTFS (zip)", type="zip")
-
 date_selected = st.sidebar.date_input("Sélectionner une date")
 
-if uploaded_file is not None and date_selected is not None:
-    date_str = date_selected.strftime("%Y%m%d")
+# Variables globales pour stocker les résultats
+if "feed" not in st.session_state:
+    st.session_state.feed = None
+if "active_service_ids" not in st.session_state:
+    st.session_state.active_service_ids = None
+if "date_str" not in st.session_state:
+    st.session_state.date_str = None
+if "indicateurs_arrets" not in st.session_state:
+    st.session_state.indicateurs_arrets = None
+if "indicateurs_bus" not in st.session_state:
+    st.session_state.indicateurs_bus = None
+if "indicateurs_tram" not in st.session_state:
+    st.session_state.indicateurs_tram = None
+if "modes_disponibles" not in st.session_state:
+    st.session_state.modes_disponibles = None
+if "last_date_str" not in st.session_state:
+    st.session_state.last_date_str = None
 
-    # Sauvegarder temporairement le fichier
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_file:
-        tmp_file.write(uploaded_file.read())
-        zip_path = tmp_file.name
 
-    try:
-        # Charger le GTFS
-        with st.spinner("Chargement du fichier GTFS..."):
-            feed = charger_gtfs(zip_path)
+# Fonction pour vérifier si la date a changé et remettre à zéro les indicateurs
+def check_date_change():
+    current_date_str = date_selected.strftime("%Y%m%d") if date_selected else None
+    if st.session_state.last_date_str != current_date_str:
+        # La date a changé, remettre à zéro tous les indicateurs
+        st.session_state.indicateurs_arrets = None
+        st.session_state.indicateurs_bus = None
+        st.session_state.indicateurs_tram = None
+        st.session_state.modes_disponibles = None
+        st.session_state.last_date_str = current_date_str
 
-        # Calculer les indicateurs
-        with st.spinner("Calcul des indicateurs..."):
-            active_service_ids = obtenir_service_ids_pour_date(feed, date_str)  # Juste pour vérifier les services actifs
-            indicateurs = calculer_indicateurs_arrets(feed, active_service_ids, date_str)
 
-        if indicateurs is not None:
-            st.success("Analyse terminée !")
+# Fonction pour charger les données
+def charger_donnees_gtfs():
+    if uploaded_file is not None and date_selected is not None:
+        date_str = date_selected.strftime("%Y%m%d")
 
-            # Statistiques globales
-            st.header("Statistiques Globales")
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Nombre d'arrêts", len(indicateurs))
+        # Sauvegarder temporairement le fichier
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_file:
+            tmp_file.write(uploaded_file.read())
+            zip_path = tmp_file.name
 
-            # Top 10 arrêts
-            st.header("Top 10 Arrêts les plus fréquentés")
-            st.dataframe(indicateurs.drop(columns=["stop_lat", "stop_lon"]).head(10))
+        try:
+            # Charger le GTFS
+            with st.spinner("Chargement du fichier GTFS..."):
+                feed = charger_gtfs(zip_path)
 
-            # Carte
-            st.header("Carte des Arrêts")
-            m = create_carte_arrets(indicateurs)
-            components.html(m._repr_html_(), height=500, width=1000)
+            # Obtenir les services actifs
+            active_service_ids = obtenir_service_ids_pour_date(feed, date_str)
 
-            # Télécharger les résultats
-            csv = indicateurs.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Télécharger les résultats CSV",
-                data=csv,
-                file_name=f"indicateurs_arrets_{date_str}.csv",
-                mime="text/csv",
-            )
-        else:
-            st.error("Aucun service actif pour cette date.")
+            # Stocker dans session_state
+            st.session_state.feed = feed
+            st.session_state.active_service_ids = active_service_ids
+            st.session_state.date_str = date_str
 
-    except Exception as e:
-        st.error(f"Erreur lors du traitement : {e}")
+            # Nettoyer le fichier temporaire
+            os.unlink(zip_path)
 
-    finally:
-        # Nettoyer le fichier temporaire
-        os.unlink(zip_path)
+            return True
 
-else:
-    st.info("Veuillez uploader un fichier GTFS et sélectionner une date.")
+        except Exception as e:
+            st.error(f"Erreur lors du chargement : {e}")
+            os.unlink(zip_path)
+            return False
+    return False
+
+
+# Charger les données automatiquement si nécessaire
+charger_donnees_gtfs()
+
+# Vérifier si la date a changé et remettre à zéro les indicateurs si nécessaire
+check_date_change()
+
+# Navigation entre les pages
+if st.session_state.selected_page == "Accueil":
+    home_page()
+elif st.session_state.selected_page == "Arrêts":
+    arrets_page()
+elif st.session_state.selected_page == "Tronçons":
+    troncons_page()

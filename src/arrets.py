@@ -4,8 +4,6 @@ Calcule pour chaque arrêt : nombre de passages, premier et dernier départ
 """
 
 import pandas as pd
-import folium
-import numpy as np
 
 
 def calculer_indicateurs_arrets(feed, active_service_ids: list[str], date_str: str):
