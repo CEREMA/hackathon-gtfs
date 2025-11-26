@@ -1,0 +1,5 @@
+{
+    "litePlugins": {
+        "@jupyterlite/pyodide-kernel-extension": true
+    }
+}
