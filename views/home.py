@@ -12,16 +12,42 @@ def home_page():
     # Section Hackathon
     st.markdown(
         """
-    ## Hackathon Cerema
+    ## Hackathon TSNI 2025 - Cerema
 
-    Ce projet a été développé lors d'un Hackathon Cerema les 25 et 26 novembre 2025.
+    Ce projet a été développé lors du Hackathon TSNI 2025 du Cerema.
     
-    L'objectif du projet était de [à compléter]
+    **Équipe :** Patrick GENDRE, Hugo DE LUCA et Maxence LIOGIER
     """
     )
 
     st.markdown("---")
 
+    # Liens rapides
+    st.markdown(
+        """
+    ## 🔗 Liens rapides
+
+    Pour aller plus loin, vous pouvez consulter le notebook disponible sur Colab :
+    - **📓 [Notebook Google Colab](https://colab.research.google.com/github/CEREMA/hackathon-gtfs/blob/main/gtfs_notebook.ipynb)** : Prendre en main le code, exécuter les cellules et regarder les cartographies dynamiques
+    """
+    )
+
+    st.markdown("---")
+
+    # Objectifs
+    st.markdown(
+        """
+    ## Objectifs
+
+    - **Offrir une chaîne de traitement** pour passer d'un jeu GTFS brut à des exports géolocalisés d'indicateurs à l'échelle des arrêts et des tronçons
+    - **Proposer une offre d'indicateurs sur les tronçons** même en l'absence du fichier shapes.txt dans les données GTFS
+    - **Proposer à la fois des scripts utilisables en local**, une interface web conviviale (via Streamlit) pour les utilisateurs non-techniques, et un notebook d'exemple pour tester / explorer les résultats
+    """
+    )
+
+    st.markdown("---")
+
+    # Fonctionnalités disponibles
     st.markdown(
         """
     ## Bienvenue dans l'application d'analyse GTFS
@@ -62,12 +88,12 @@ def home_page():
     st.markdown(
         """
     ## Contributeurs :
-    - Hugo De Luca
-    - Maxence Liogier
-    - Patrick Gendre
+    - Hugo De Luca ([@hugo-deluca](https://github.com/hugo-deluca))
+    - Maxence Liogier ([@maxenceLIOGIER](https://github.com/maxenceLIOGIER))
+    - Patrick Gendre ([@PatGendre](https://github.com/PatGendre))
 
     ---
 
-    *Projet open-source - Cerema 2025*
+    [*Projet open-source - Cerema 2025*](https://github.com/CEREMA/hackathon-gtfs)
     """
     )

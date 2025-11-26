@@ -139,7 +139,7 @@ def creer_troncons_uniques(feed, route_type):
                         row["lon_depart_parent"],
                         row["lat_depart_parent"],
                         row["lon_arrivee_parent"],
-                        row["lon_arrivee_parent"],
+                        row["lat_arrivee_parent"],
                     ]
                 )
             )

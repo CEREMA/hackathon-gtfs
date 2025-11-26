@@ -112,6 +112,10 @@ def charger_donnees_gtfs():
             st.session_state.feed = feed
             st.session_state.active_service_ids = active_service_ids
             st.session_state.date_str = date_str
+            st.session_state.indicateurs_arrets = None  # Réinitialiser les indicateurs
+            st.session_state.indicateurs_bus = None
+            st.session_state.indicateurs_tram = None
+            st.session_state.modes_disponibles = None
 
             # Nettoyer le fichier temporaire
             os.unlink(zip_path)
