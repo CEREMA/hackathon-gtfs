@@ -5,7 +5,7 @@ Il est également proposé un notebook interactif pour comprendre les opération
 
 Elle a été développée lors du Hackathon TSNI 2025 du Cerema par l'équipe composée de Patrick GENDRE, Hugo DE LUCA et Maxence LIOGIER.
 
-Ce projet est en version alpha et il reste des [améliorations à implémenter](#todo)
+Ce projet est en version alpha et il reste des [améliorations à implémenter](#todo).
 
 ## 🔗 Liens rapides
 
@@ -23,7 +23,6 @@ Pour voir la librairie en action, vous pouvez :
 
 ## TODO
 
-- Corriger le notebook
 - Généraliser le traitement des modes pour adapter à plus de réseaux
 - Regrouper les arrêts par parent et répercuter sur les indicateurs
 - Améliorer la carte des arrêts (+ de métriques affichées...)
