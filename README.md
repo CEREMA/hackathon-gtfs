@@ -27,6 +27,7 @@ Pour voir la librairie en action, vous pouvez :
 - Généraliser le traitement des modes pour adapter à plus de réseaux
 - Regrouper les arrêts par parent et répercuter sur les indicateurs
 - Améliorer la carte des arrêts (+ de métriques affichées...)
+- Sécuriser la branche main (peut être modifiée par Colab)
 - Peaufiner l'esthétique
 
 
